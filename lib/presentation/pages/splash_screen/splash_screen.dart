@@ -57,8 +57,8 @@ class _SplashScreenState extends State<SplashScreen>
               scale: _animation,
               child: FadeTransition(
                 opacity: _animation,
-                child: SvgPicture.asset(
-                  'assets/svg/bhd_star_logo.svg',
+                child: Image.asset(
+                  'assets/logo/bhd_star_logo.png',
                   width: 200,
                   height: 200,
                 ),

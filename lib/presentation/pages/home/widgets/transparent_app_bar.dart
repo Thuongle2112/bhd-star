@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class TransparentAppBar extends StatelessWidget {
   final double opacity;
+  final VoidCallback? onMenuPressed;
 
-  const TransparentAppBar({super.key, required this.opacity});
+  const TransparentAppBar({
+    super.key,
+    required this.opacity,
+    this.onMenuPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +41,8 @@ class TransparentAppBar extends StatelessWidget {
                   opacity > 0.3 ? 1.0 : opacity + 0.7,
                 ),
               ),
-              onPressed: () {},
+              onPressed: onMenuPressed,
             ),
-            // Expanded(
-            //   child: Opacity(
-            //     opacity: opacity,
-            //     child: const Center(
-            //       child: Text(
-            //         'BHD STAR',
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.bold,
-            //           letterSpacing: 1.0,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             IconButton(
               icon: Icon(
                 Icons.notifications_none,

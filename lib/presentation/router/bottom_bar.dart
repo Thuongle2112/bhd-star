@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
+import '../../core/common/widgets/nav_menu/nav_menu.dart';
 import '../../core/utils/constants/app_assets_svg.dart';
 import '../pages/profile_page/profile_page.dart';
 import '../pages/shop_page/shop_page.dart';
@@ -18,6 +19,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _currentTabIndex = 0;
+  bool _isNavMenuOpen = false;
 
   late List<Widget> pages;
   late HomePage homePage;
@@ -27,7 +29,13 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   void initState() {
-    homePage = const HomePage();
+    homePage = HomePage(
+      onMenuPressed: () {
+        setState(() {
+          _isNavMenuOpen = true;
+        });
+      },
+    );
     showTimePage = const ShowTimePage();
     shopPage = const ShopPage();
     profilePage = const ProfilePage();
@@ -43,98 +51,137 @@ class _BottomBarState extends State<BottomBar> {
 
     const double iconSize = 24.0;
 
-    return Scaffold(
-      body: pages[_currentTabIndex],
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: backgroundColor,
-          border: Border(top: BorderSide(color: Colors.black26, width: 0.5)),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentTabIndex,
-          onTap: (int index) {
-            setState(() {
-              _currentTabIndex = index;
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: backgroundColor,
-          selectedItemColor: activeColor,
-          unselectedItemColor: inactiveColor,
-          selectedLabelStyle: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            height: 1.5,
+    return Stack(
+      children: [
+        Scaffold(
+          body: pages[_currentTabIndex],
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              color: backgroundColor,
+              border: Border(
+                top: BorderSide(color: Colors.black26, width: 0.5),
+              ),
+            ),
+            child: BottomNavigationBar(
+              currentIndex: _currentTabIndex,
+              onTap: (int index) {
+                setState(() {
+                  _currentTabIndex = index;
+                });
+              },
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: backgroundColor,
+              selectedItemColor: activeColor,
+              unselectedItemColor: inactiveColor,
+              selectedLabelStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                height: 1.5,
+              ),
+              unselectedLabelStyle: const TextStyle(fontSize: 12, height: 1.5),
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedIconTheme: const IconThemeData(size: iconSize),
+              unselectedIconTheme: const IconThemeData(size: iconSize),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: SvgPicture.asset(
+                      AppAssets.homeIcon,
+                      colorFilter: ColorFilter.mode(
+                        _currentTabIndex == 0 ? activeColor : inactiveColor,
+                        BlendMode.srcIn,
+                      ),
+                      height: iconSize,
+                      width: iconSize,
+                    ),
+                  ),
+                  label: LocaleKeys.home.tr(),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: SvgPicture.asset(
+                      AppAssets.filmIcon,
+                      colorFilter: ColorFilter.mode(
+                        _currentTabIndex == 1 ? activeColor : inactiveColor,
+                        BlendMode.srcIn,
+                      ),
+                      height: iconSize,
+                      width: iconSize,
+                    ),
+                  ),
+                  label: LocaleKeys.showtimes.tr(),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: SvgPicture.asset(
+                      AppAssets.shopIcon,
+                      colorFilter: ColorFilter.mode(
+                        _currentTabIndex == 2 ? activeColor : inactiveColor,
+                        BlendMode.srcIn,
+                      ),
+                      height: iconSize,
+                      width: iconSize,
+                    ),
+                  ),
+                  label: LocaleKeys.store.tr(),
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: SvgPicture.asset(
+                      AppAssets.profileIcon,
+                      colorFilter: ColorFilter.mode(
+                        _currentTabIndex == 3 ? activeColor : inactiveColor,
+                        BlendMode.srcIn,
+                      ),
+                      height: iconSize,
+                      width: iconSize,
+                    ),
+                  ),
+                  label: LocaleKeys.personal.tr(),
+                ),
+              ],
+            ),
           ),
-          unselectedLabelStyle: const TextStyle(fontSize: 12, height: 1.5),
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedIconTheme: const IconThemeData(size: iconSize),
-          unselectedIconTheme: const IconThemeData(size: iconSize),
-          items: [
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: SvgPicture.asset(
-                  AppAssets.homeIcon,
-                  colorFilter: ColorFilter.mode(
-                    _currentTabIndex == 0 ? activeColor : inactiveColor,
-                    BlendMode.srcIn,
-                  ),
-                  height: iconSize,
-                  width: iconSize,
-                ),
-              ),
-              label: LocaleKeys.home.tr(),
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: SvgPicture.asset(
-                  AppAssets.filmIcon,
-                  colorFilter: ColorFilter.mode(
-                    _currentTabIndex == 1 ? activeColor : inactiveColor,
-                    BlendMode.srcIn,
-                  ),
-                  height: iconSize,
-                  width: iconSize,
-                ),
-              ),
-              label: LocaleKeys.showtimes.tr(),
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: SvgPicture.asset(
-                  AppAssets.shopIcon,
-                  colorFilter: ColorFilter.mode(
-                    _currentTabIndex == 2 ? activeColor : inactiveColor,
-                    BlendMode.srcIn,
-                  ),
-                  height: iconSize,
-                  width: iconSize,
-                ),
-              ),
-              label: LocaleKeys.store.tr(),
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: SvgPicture.asset(
-                  AppAssets.profileIcon,
-                  colorFilter: ColorFilter.mode(
-                    _currentTabIndex == 3 ? activeColor : inactiveColor,
-                    BlendMode.srcIn,
-                  ),
-                  height: iconSize,
-                  width: iconSize,
-                ),
-              ),
-              label: LocaleKeys.personal.tr(),
-            ),
-          ],
         ),
-      ),
+        if (_isNavMenuOpen)
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isNavMenuOpen = false;
+                        });
+                      },
+                      child: Container(color: Colors.black.withOpacity(0.5)),
+                    ),
+                  ),
+
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: NavMenu(
+                      onClose: () {
+                        setState(() {
+                          _isNavMenuOpen = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

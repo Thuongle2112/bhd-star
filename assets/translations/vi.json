@@ -6,5 +6,20 @@
   "home": "TRANG CHỦ",
   "showtimes": "LỊCH CHIẾU",
   "store": "CỬA HÀNG",
-  "personal": "CÁ NHÂN"
+  "personal": "CÁ NHÂN",
+  "home_1": "Trang chủ",
+  "showtimes_1": "Lịch chiếu",
+  "store_1": "Cửa hàng",
+  "media": "Media",
+  "promotions": "Khuyến mãi",
+  "account_information": "Thông tin của bạn",
+  "careers": "Tuyển dụng",
+  "about_bhd_star": "Về BHD Star",
+  "terms_and_conditions": "Thông tin & điều khoản",
+  "english": "Tiếng Anh",
+  "vietnamese": "Tiếng Việt",
+  "select_language": "Chọn ngôn ngữ",
+  "version": "Phiên bản",
+  "exit": "Thoát",
+  "confirm": "Xác nhận"
 }

@@ -1,25 +1,20 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 
 import '../../../../core/l10n/locale_keys.g.dart';
 import '../../../../core/utils/constants/app_assets_svg.dart';
 import '../../../../data/models/movie/movie_model.dart';
+import '../bloc/movie_bloc.dart';
+import '../bloc/movie_event.dart';
+import '../bloc/movie_state.dart';
 
 class MovieList extends StatefulWidget {
-  final List<Movie> movies;
-  final Movie? selectedMovie;
-  final Function(Movie) onMovieSelected;
   final Color Function(String) getAgeRatingColor;
 
-  const MovieList({
-    super.key,
-    required this.movies,
-    this.selectedMovie,
-    required this.onMovieSelected,
-    required this.getAgeRatingColor,
-  });
+  const MovieList({super.key, required this.getAgeRatingColor});
 
   @override
   State<MovieList> createState() => _MovieListState();
@@ -27,134 +22,131 @@ class MovieList extends StatefulWidget {
 
 class _MovieListState extends State<MovieList> {
   late PageController _pageController;
-  int _currentIndex = 0;
+  bool _isPageControllerInitialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(
-      initialPage: widget.movies.length,
-      viewportFraction: 0.65,
-    );
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final state = context.read<MovieBloc>().state;
 
-  @override
-  void didUpdateWidget(MovieList oldWidget) {
-    super.didUpdateWidget(oldWidget);
+    if (!_isPageControllerInitialized) {
+      final initialIndex = 0;
 
-    if (widget.movies != oldWidget.movies ||
-        widget.selectedMovie != oldWidget.selectedMovie) {
-      final newIndex =
-          widget.selectedMovie != null
-              ? widget.movies.indexOf(widget.selectedMovie!)
-              : 0;
-
-      if (_pageController.hasClients) {
-        _pageController.jumpToPage(newIndex + widget.movies.length);
-      }
+      _pageController = PageController(
+        initialPage: initialIndex,
+        viewportFraction: 0.65,
+      );
+      _isPageControllerInitialized = true;
     }
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.movies.isEmpty) {
-      return const SizedBox(
-        height: 200,
-        child: Center(
-          child: Text(
-            'Không có phim để hiển thị',
-            style: TextStyle(color: Colors.white54),
-          ),
-        ),
-      );
-    }
+    return BlocBuilder<MovieBloc, MovieState>(
+      builder: (context, state) {
+        final movies = state.currentMovies;
+        final currentIndex = state.currentIndex;
 
-    // Nhân đôi danh sách phim để tạo hiệu ứng cuộn vô hạn
-    final infiniteMovies = [...widget.movies, ...widget.movies];
+        if (movies.isEmpty) {
+          return const SizedBox(
+            height: 200,
+            child: Center(
+              child: Text(
+                'Không có phim để hiển thị',
+                style: TextStyle(color: Colors.white54),
+              ),
+            ),
+          );
+        }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 350,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: infiniteMovies.length,
-            onPageChanged: (index) {
-              final actualIndex = index % widget.movies.length;
+        final infiniteMovies = [...movies, ...movies];
 
-              if (index == 0) {
-                _pageController.jumpToPage(widget.movies.length);
-              } else if (index == infiniteMovies.length - 1) {
-                _pageController.jumpToPage(widget.movies.length - 1);
-              }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: PageView.builder(
+                controller: context.read<MovieBloc>().pageController,
+                itemCount: infiniteMovies.length,
+                onPageChanged: (index) {
+                  final actualIndex = index % movies.length;
 
-              setState(() {
-                _currentIndex = actualIndex;
-              });
-              widget.onMovieSelected(widget.movies[actualIndex]);
-            },
-            itemBuilder: (context, index) {
-              final actualIndex = index % widget.movies.length;
-              final isCenter = actualIndex == _currentIndex;
-
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutQuint,
-                margin: EdgeInsets.symmetric(
-                  vertical: isCenter ? 10 : 40,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow:
-                      isCenter
-                          ? [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 8,
-                            ),
-                          ]
-                          : [],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    widget.movies[actualIndex].posterUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey.shade800,
-                        child: const Center(
-                          child: Icon(
-                            Icons.broken_image,
-                            color: Colors.white54,
-                            size: 40,
-                          ),
-                        ),
+                  if (index == 0) {
+                    Future.microtask(() {
+                      context.read<MovieBloc>().pageController.jumpToPage(
+                        movies.length,
                       );
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+                    });
+                  } else if (index == infiniteMovies.length - 1) {
+                    Future.microtask(() {
+                      context.read<MovieBloc>().pageController.jumpToPage(
+                        movies.length - 1,
+                      );
+                    });
+                  }
 
-        if (widget.selectedMovie != null)
-          _buildMovieInfo(widget.selectedMovie!),
-      ],
+                  context.read<MovieBloc>().add(
+                    MovieChangedEvent(actualIndex, movies[actualIndex]),
+                  );
+                },
+                itemBuilder: (context, index) {
+                  final actualIndex = index % movies.length;
+                  final isCenter = actualIndex == currentIndex;
+
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutQuint,
+                    margin: EdgeInsets.symmetric(
+                      vertical: isCenter ? 10 : 40,
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow:
+                          isCenter
+                              ? [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                ),
+                              ]
+                              : [],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        infiniteMovies[actualIndex].posterUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade800,
+                            child: const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.white54,
+                                size: 40,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            if (state.selectedMovie != null)
+              _buildMovieInfo(context, state.selectedMovie!),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildMovieInfo(Movie movie) {
+  Widget _buildMovieInfo(BuildContext context, Movie movie) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Column(
@@ -169,7 +161,6 @@ class _MovieListState extends State<MovieList> {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +173,6 @@ class _MovieListState extends State<MovieList> {
               ),
             ],
           ),
-
           if (movie.isNowShowing) const SizedBox(height: 16),
           if (movie.isNowShowing)
             SizedBox(
@@ -209,7 +199,7 @@ class _MovieListState extends State<MovieList> {
                     Gap(8),
                     Text(
                       LocaleKeys.booking.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),

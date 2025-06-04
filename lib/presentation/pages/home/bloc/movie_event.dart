@@ -20,13 +20,14 @@ class MovieTabChangedEvent extends MovieEvent {
   List<Object> get props => [tab];
 }
 
-class MovieSelectedEvent extends MovieEvent {
+class MovieChangedEvent extends MovieEvent {
+  final int index;
   final Movie movie;
 
-  MovieSelectedEvent(this.movie);
+  MovieChangedEvent(this.index, this.movie);
 
   @override
-  List<Object> get props => [movie];
+  List<Object> get props => [index, movie];
 }
 
 class BannerChangedEvent extends MovieEvent {
@@ -56,4 +57,13 @@ class AppBarScrolledEvent extends MovieEvent {
 
   @override
   List<Object> get props => [scrollOffset];
+}
+
+class ToggleNavMenuEvent extends MovieEvent {
+  final bool isOpen;
+
+  ToggleNavMenuEvent(this.isOpen);
+
+  @override
+  List<Object> get props => [isOpen];
 }
