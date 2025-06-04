@@ -6,5 +6,20 @@
   "home": "HOME",
   "showtimes": "SHOWTIMES",
   "store": "STORE",
-  "personal": "PERSONAL"
+  "personal": "PERSONAL",
+  "home_1": "Home",
+  "showtimes_1": "Showtimes",
+  "store_1": "Store",
+  "media": "Media",
+  "promotions": "Promotions",
+  "account_information": "Account Information",
+  "careers": "Careers",
+  "about_bhd_star": "About BHD Star",
+  "terms_and_conditions": "Terms and Conditions",
+  "english": "English",
+  "vietnamese": "Vietnamese",
+  "select_language": "Select Language",
+  "version": "Version",
+  "exit": "Exit",
+  "confirm": "Confirm"
 }

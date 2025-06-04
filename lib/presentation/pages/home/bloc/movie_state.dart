@@ -12,10 +12,12 @@ class MovieState extends Equatable {
   final List<Movie> upcomingMovies;
   final Movie? selectedNowShowingMovie;
   final Movie? selectedUpcomingMovie;
+  final int currentIndex;
   final double appBarOpacity;
   final bool showFloatingAd;
   final Offset? floatingAdPosition;
   final int currentBannerIndex;
+  final bool isNavMenuOpen;
 
   const MovieState({
     this.selectedTab = MovieTab.nowShowing,
@@ -23,11 +25,21 @@ class MovieState extends Equatable {
     this.upcomingMovies = const [],
     this.selectedNowShowingMovie,
     this.selectedUpcomingMovie,
+    this.currentIndex = 0,
     this.appBarOpacity = 0.0,
     this.showFloatingAd = true,
+    this.isNavMenuOpen = false,
     this.floatingAdPosition,
     this.currentBannerIndex = 0,
   });
+
+  Movie? get selectedMovie =>
+      selectedTab == MovieTab.nowShowing
+          ? selectedNowShowingMovie
+          : selectedUpcomingMovie;
+
+  List<Movie> get currentMovies =>
+      selectedTab == MovieTab.nowShowing ? nowShowingMovies : upcomingMovies;
 
   MovieState copyWith({
     MovieTab? selectedTab,
@@ -35,10 +47,12 @@ class MovieState extends Equatable {
     List<Movie>? upcomingMovies,
     Movie? selectedNowShowingMovie,
     Movie? selectedUpcomingMovie,
+    int? currentIndex,
     double? appBarOpacity,
     bool? showFloatingAd,
     Offset? floatingAdPosition,
     int? currentBannerIndex,
+    bool? isNavMenuOpen,
   }) {
     return MovieState(
       selectedTab: selectedTab ?? this.selectedTab,
@@ -48,23 +62,13 @@ class MovieState extends Equatable {
           selectedNowShowingMovie ?? this.selectedNowShowingMovie,
       selectedUpcomingMovie:
           selectedUpcomingMovie ?? this.selectedUpcomingMovie,
+      currentIndex: currentIndex ?? this.currentIndex,
       appBarOpacity: appBarOpacity ?? this.appBarOpacity,
       showFloatingAd: showFloatingAd ?? this.showFloatingAd,
       floatingAdPosition: floatingAdPosition ?? this.floatingAdPosition,
       currentBannerIndex: currentBannerIndex ?? this.currentBannerIndex,
+      isNavMenuOpen: isNavMenuOpen ?? this.isNavMenuOpen,
     );
-  }
-
-  Movie? get selectedMovie {
-    return selectedTab == MovieTab.nowShowing
-        ? selectedNowShowingMovie
-        : selectedUpcomingMovie;
-  }
-
-  List<Movie> get currentMovies {
-    return selectedTab == MovieTab.nowShowing
-        ? nowShowingMovies
-        : upcomingMovies;
   }
 
   @override
@@ -74,9 +78,11 @@ class MovieState extends Equatable {
     upcomingMovies,
     selectedNowShowingMovie,
     selectedUpcomingMovie,
+    currentIndex,
     appBarOpacity,
     showFloatingAd,
     floatingAdPosition,
     currentBannerIndex,
+    isNavMenuOpen,
   ];
 }
