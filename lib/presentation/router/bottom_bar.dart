@@ -1,4 +1,5 @@
 import 'package:bhd_star/core/l10n/locale_keys.g.dart';
+import 'package:bhd_star/presentation/pages/auth/login/login_page.dart';
 import 'package:bhd_star/presentation/pages/home/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ class _BottomBarState extends State<BottomBar> {
   late List<Widget> pages;
   late HomePage homePage;
   late ShowTimePage showTimePage;
-  late ShopPage shopPage;
+  // late ShopPage shopPage;
+  late LoginPage loginPage;
   late ProfilePage profilePage;
 
   @override
@@ -37,9 +39,10 @@ class _BottomBarState extends State<BottomBar> {
       },
     );
     showTimePage = const ShowTimePage();
-    shopPage = const ShopPage();
+    // shopPage = const ShopPage();
+    loginPage = LoginPage();
     profilePage = const ProfilePage();
-    pages = [homePage, showTimePage, shopPage, profilePage];
+    pages = [homePage, showTimePage, loginPage, profilePage];
     super.initState();
   }
 

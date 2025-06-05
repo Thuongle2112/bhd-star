@@ -26,5 +26,25 @@ abstract class  LocaleKeys {
   static const version = 'version';
   static const exit = 'exit';
   static const confirm = 'confirm';
+  static const you_need_to_login = 'you_need_to_login';
+  static const email_or_username = 'email_or_username';
+  static const password = 'password';
+  static const forget_password = 'forget_password';
+  static const login = 'login';
+  static const do_not_have_an_account = 'do_not_have_an_account';
+  static const register = 'register';
+  static const email = 'email';
+  static const password_1 = 'password_1';
+  static const confirm_password = 'confirm_password';
+  static const last_name = 'last_name';
+  static const first_name = 'first_name';
+  static const mobile = 'mobile';
+  static const date_of_birth = 'date_of_birth';
+  static const gender = 'gender';
+  static const city_province = 'city_province';
+  static const address = 'address';
+  static const i_have_read_and_agree_to = 'i_have_read_and_agree_to';
+  static const the_terms_and_conditions = 'the_terms_and_conditions';
+  static const required = 'required';
 
 }
