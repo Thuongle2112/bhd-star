@@ -34,9 +34,9 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
         nowShowingMovies: nowShowingMovies,
         upcomingMovies: upcomingMovies,
         selectedNowShowingMovie:
-            nowShowingMovies.isNotEmpty ? nowShowingMovies[0] : null,
+            nowShowingMovies.isNotEmpty ? nowShowingMovies.first : null,
         selectedUpcomingMovie:
-            upcomingMovies.isNotEmpty ? upcomingMovies[0] : null,
+            upcomingMovies.isNotEmpty ? upcomingMovies.first : null,
       ),
     );
   }
@@ -45,12 +45,15 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     MovieTabChangedEvent event,
     Emitter<MovieState> emit,
   ) {
-    emit(
-      state.copyWith(
-        selectedTab: event.tab,
-        currentIndex: 0, // Reset index khi chuyển tab
-      ),
-    );
+    if (scrollController.offset > 0) {
+      scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+
+    emit(state.copyWith(selectedTab: event.tab));
   }
 
   void _onMovieChanged(MovieChangedEvent event, Emitter<MovieState> emit) {
