@@ -136,7 +136,7 @@ final List<Movie> movies = [
         'https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-6/502989655_1187705363151204_9031003673279290291_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeH_PO6_8kvx_RuYrKXj7h-DxozGi62D0I_GjMaLrYPQj2wAdEASX4x1VrYg2_NJBzB-eCKczuApVfcGwAEpGIY1&_nc_ohc=FL5dqoXM8UAQ7kNvwF5Tjot&_nc_oc=AdnwbcdtVH0HrCMwTr9SseCoOxEiO5C1H8VBZhskTPEilEMKWzeFflAIb43kmXGCwMw7C0ZkdTDGnahTFsjUvL_c&_nc_zt=23&_nc_ht=scontent.fhan15-2.fna&_nc_gid=2osf4u2RS-1upre2QNNJlg&oh=00_AfLxw5Z8yCm2DXxXFJ28S0Mm_zaCcvzRYknk1qSFd-P9nQ&oe=684271CE',
     director: 'Yasuichiro Yamamoto',
     cast: ['Wasabi Mizuta', 'Megumi Ohara', 'Yumi Kakazu'],
-    trailerUrl: 'https://www.youtube.com/watch?v=RU_G9XXmLc4',
+    trailerUrl: 'https://www.youtube.com/watch?v=1b2sSI51Edw',
     isNowShowing: true,
   ),
   Movie(
