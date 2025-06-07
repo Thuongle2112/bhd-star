@@ -7,6 +7,7 @@ import 'package:svg_flutter/svg.dart';
 import '../../../../core/l10n/locale_keys.g.dart';
 import '../../../../core/utils/constants/app_assets_svg.dart';
 import '../../../../data/models/movie/movie_model.dart';
+import '../../movie_detail/movie_detail_page.dart';
 import '../bloc/movie_bloc.dart';
 import '../bloc/movie_event.dart';
 import '../bloc/movie_state.dart';
@@ -94,43 +95,55 @@ class _MovieListState extends State<MovieList> {
                   final actualIndex = index % movies.length;
                   final isCenter = actualIndex == currentIndex;
 
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutQuint,
-                    margin: EdgeInsets.symmetric(
-                      vertical: isCenter ? 10 : 40,
-                      horizontal: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow:
-                          isCenter
-                              ? [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  MovieDetailPage(movie: movies[actualIndex]),
+                        ),
+                      );
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOutQuint,
+                      margin: EdgeInsets.symmetric(
+                        vertical: isCenter ? 10 : 40,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow:
+                            isCenter
+                                ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 8,
+                                  ),
+                                ]
+                                : [],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          infiniteMovies[actualIndex].posterUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.shade800,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.white54,
+                                  size: 40,
                                 ),
-                              ]
-                              : [],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        infiniteMovies[actualIndex].posterUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey.shade800,
-                            child: const Center(
-                              child: Icon(
-                                Icons.broken_image,
-                                color: Colors.white54,
-                                size: 40,
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   );
